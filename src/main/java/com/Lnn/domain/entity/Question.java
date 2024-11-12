@@ -4,10 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Question {
     private Long id;
 
@@ -27,14 +28,20 @@ public class Question {
 
     private String field4;
 
+    private String field5;
+
+    private String field6;
+
     private String correctField;
 
-    private String textField;
+    private LocalDateTime createTime;
 
-    private Date createTime;
-
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     private Boolean isDeleted;
+
+    private Long creatorId;
+
+    private String creatorName;
 
 }

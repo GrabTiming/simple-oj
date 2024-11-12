@@ -15,10 +15,12 @@
     from subject
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from subject
+
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    update  subject
+    set is_deleted = true
     where id = #{id,jdbcType=BIGINT}
-  </delete>
+  </update>
   <insert id="insert" parameterType="com.Lnn.domain.entity.Subject">
     insert into subject (id, name, is_deleted
       )
@@ -68,4 +70,10 @@
       is_deleted = #{isDeleted,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="findAll" resultType="com.Lnn.domain.entity.Subject">
+    select *
+    from subject
+    where is_deleted = false
+  </select>
 </mapper>

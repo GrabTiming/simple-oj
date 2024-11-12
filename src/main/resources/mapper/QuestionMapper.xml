@@ -11,15 +11,18 @@
     <result column="field2" jdbcType="VARCHAR" property="field2" />
     <result column="field3" jdbcType="VARCHAR" property="field3" />
     <result column="field4" jdbcType="VARCHAR" property="field4" />
+    <result column="field5" jdbcType="VARCHAR" property="field5" />
+    <result column="field6" jdbcType="VARCHAR" property="field6" />
     <result column="correct_field" jdbcType="VARCHAR" property="correctField" />
-    <result column="text_field" jdbcType="VARCHAR" property="textField" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_time" jdbcType="OTHER" property="createTime" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler" />
+    <result column="update_time" jdbcType="OTHER" property="updateTime" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
+    <result column="creator_id" jdbcType="BIGINT" property="creatorId" />
+    <result column="creator_name" jdbcType="VARCHAR" property="creatorName" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, subject_id, type, description, field_count, field1, field2, field3, field4, correct_field, 
-    text_field, create_time, update_time, is_deleted
+    id, subject_id, type, description, field_count, field1, field2, field3, field4, field5, 
+    field6, correct_field, create_time, update_time, is_deleted, creator_id, creator_name
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -27,21 +30,28 @@
     from question
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from question
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    update  question
+    set is_deleted = true
     where id = #{id,jdbcType=BIGINT}
-  </delete>
+  </update>
   <insert id="insert" parameterType="com.Lnn.domain.entity.Question">
     insert into question (id, subject_id, type, 
       description, field_count, field1, 
       field2, field3, field4, 
-      correct_field, text_field, create_time, 
-      update_time, is_deleted)
+      field5, field6, correct_field, 
+      create_time, 
+      update_time, 
+      is_deleted, creator_id, creator_name
+      )
     values (#{id,jdbcType=BIGINT}, #{subjectId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, 
       #{description,jdbcType=VARCHAR}, #{fieldCount,jdbcType=INTEGER}, #{field1,jdbcType=VARCHAR}, 
       #{field2,jdbcType=VARCHAR}, #{field3,jdbcType=VARCHAR}, #{field4,jdbcType=VARCHAR}, 
-      #{correctField,jdbcType=VARCHAR}, #{textField,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT})
+      #{field5,jdbcType=VARCHAR}, #{field6,jdbcType=VARCHAR}, #{correctField,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=OTHER,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler}, 
+      #{updateTime,jdbcType=OTHER,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler}, 
+      #{isDeleted,jdbcType=BIT}, #{creatorId,jdbcType=BIGINT}, #{creatorName,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.Lnn.domain.entity.Question">
     insert into question
@@ -73,11 +83,14 @@
       <if test="field4 != null">
         field4,
       </if>
+      <if test="field5 != null">
+        field5,
+      </if>
+      <if test="field6 != null">
+        field6,
+      </if>
       <if test="correctField != null">
         correct_field,
-      </if>
-      <if test="textField != null">
-        text_field,
       </if>
       <if test="createTime != null">
         create_time,
@@ -87,6 +100,12 @@
       </if>
       <if test="isDeleted != null">
         is_deleted,
+      </if>
+      <if test="creatorId != null">
+        creator_id,
+      </if>
+      <if test="creatorName != null">
+        creator_name,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -117,20 +136,29 @@
       <if test="field4 != null">
         #{field4,jdbcType=VARCHAR},
       </if>
+      <if test="field5 != null">
+        #{field5,jdbcType=VARCHAR},
+      </if>
+      <if test="field6 != null">
+        #{field6,jdbcType=VARCHAR},
+      </if>
       <if test="correctField != null">
         #{correctField,jdbcType=VARCHAR},
       </if>
-      <if test="textField != null">
-        #{textField,jdbcType=VARCHAR},
-      </if>
       <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
+        #{createTime,jdbcType=OTHER,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
       </if>
       <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=OTHER,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
       </if>
       <if test="isDeleted != null">
         #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="creatorId != null">
+        #{creatorId,jdbcType=BIGINT},
+      </if>
+      <if test="creatorName != null">
+        #{creatorName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -161,20 +189,29 @@
       <if test="field4 != null">
         field4 = #{field4,jdbcType=VARCHAR},
       </if>
+      <if test="field5 != null">
+        field5 = #{field5,jdbcType=VARCHAR},
+      </if>
+      <if test="field6 != null">
+        field6 = #{field6,jdbcType=VARCHAR},
+      </if>
       <if test="correctField != null">
         correct_field = #{correctField,jdbcType=VARCHAR},
       </if>
-      <if test="textField != null">
-        text_field = #{textField,jdbcType=VARCHAR},
-      </if>
       <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
+        create_time = #{createTime,jdbcType=OTHER,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
       </if>
       <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=OTHER,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
       </if>
       <if test="isDeleted != null">
         is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="creatorId != null">
+        creator_id = #{creatorId,jdbcType=BIGINT},
+      </if>
+      <if test="creatorName != null">
+        creator_name = #{creatorName,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -189,11 +226,14 @@
       field2 = #{field2,jdbcType=VARCHAR},
       field3 = #{field3,jdbcType=VARCHAR},
       field4 = #{field4,jdbcType=VARCHAR},
+      field5 = #{field5,jdbcType=VARCHAR},
+      field6 = #{field6,jdbcType=VARCHAR},
       correct_field = #{correctField,jdbcType=VARCHAR},
-      text_field = #{textField,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      is_deleted = #{isDeleted,jdbcType=BIT}
+      create_time = #{createTime,jdbcType=OTHER,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      update_time = #{updateTime,jdbcType=OTHER,typeHandler=org.apache.ibatis.type.LocalDateTimeTypeHandler},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      creator_id = #{creatorId,jdbcType=BIGINT},
+      creator_name = #{creatorName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
