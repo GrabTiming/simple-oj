@@ -1,0 +1,17 @@
+server:
+  port: 7182
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/simple-oj?characterEncoding=utf-8&serverTimezone=UTC
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    #开启驼峰命名
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+generator:
+  worker-id: 10
